@@ -5,15 +5,16 @@ public class TankShooting : MonoBehaviour
 {
     public int m_PlayerNumber = 1;
     public GameObject tankTurret;
-    public Rigidbody m_Shell;            
-    public Transform m_FireTransform;    
-    public AudioSource m_ShootingAudio;  
-    public AudioClip m_FireClip;         
+    public Rigidbody m_Shell;
+    public Transform m_FireTransform;
+    public AudioSource m_ShootingAudio;
+    public AudioClip m_FireClip;
     public float m_LaunchForce = 30f;
     public float delayTime = 0.0f;
     public int ammo = 5;
-    
-    private string m_FireButton;         
+    public GameObject target;
+
+    private string m_FireButton;
     private bool m_CanFire;
     private float dt = 0.0f;
 
@@ -30,14 +31,32 @@ public class TankShooting : MonoBehaviour
 
     private void Update()
     {
-        float x = 5.0f;
-        float? angle1 = 0.0f;
-        float? angle2 = 0.0f;
-        float vel2 = Mathf.Pow(m_LaunchForce, 2);
-        angle1 = Mathf.Atan((vel2 + Mathf.Sqrt(vel2 * vel2 - g * g * x * x)) / (g * x)) * Mathf.Rad2Deg;
-        angle2 = Mathf.Atan((vel2 - Mathf.Sqrt(vel2 * vel2 - g * g * x * x)) / (g * x)) * Mathf.Rad2Deg;
+        GameObject[] list = FindObjectsOfType(typeof(GameObject)) as GameObject[];
+        foreach (GameObject go in list)
+		{
+            if(go.layer == this.gameObject.layer)
+			{
+                if (go != this)
+                {
+                    target = go;
+                    Debug.Log("Target found");
+                }
+			}
+		}
 
-        if (angle1 != null && angle2 != null)
+        Vector3 posVector = target.transform.position - this.transform.position;
+        posVector.x = Mathf.Abs(posVector.x);
+        posVector.y = Mathf.Abs(posVector.y);
+        posVector.z = Mathf.Abs(posVector.z);
+        float x = posVector.magnitude;
+        Debug.Log(x);
+		//float x = 5.0f;
+
+		float vel2 = Mathf.Pow(m_LaunchForce, 2);
+		float? angle1 = Mathf.Atan((vel2 + Mathf.Sqrt(vel2 * vel2 - g * g * x * x)) / (g * x)) * Mathf.Rad2Deg;
+		float? angle2 = Mathf.Atan((vel2 - Mathf.Sqrt(vel2 * vel2 - g * g * x * x)) / (g * x)) * Mathf.Rad2Deg;
+
+		if (angle1 != null && angle2 != null)
         {
             prevAngle = angle;
             if (angle1 <= angle2)
