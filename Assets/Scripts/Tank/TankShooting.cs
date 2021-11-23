@@ -12,9 +12,8 @@ public class TankShooting : MonoBehaviour
     public float m_LaunchForce = 30f;
     public float delayTime = 0.0f;
     public int ammo = 5;
-    public GameObject target;
+    [HideInInspector] public GameObject target;
 
-    private string m_FireButton;
     private bool m_CanFire;
     private float dt = 0.0f;
 
@@ -24,33 +23,18 @@ public class TankShooting : MonoBehaviour
 
     private void Start()
     {
-        m_FireButton = "Fire" + m_PlayerNumber;
         m_CanFire = true;
         angle = -1;
     }
 
     private void Update()
     {
-  //      GameObject[] list = FindObjectsOfType(typeof(GameObject)) as GameObject[];
-  //      foreach (GameObject go in list)
-		//{
-  //          if(go.layer == this.gameObject.layer)
-		//	{
-  //              if (go != this)
-  //              {
-  //                  target = go;
-  //                  Debug.Log("Target found");
-  //              }
-		//	}
-		//}
-
         Vector3 posVector = target.transform.position - this.transform.position;
         posVector.x = Mathf.Abs(posVector.x);
         posVector.y = Mathf.Abs(posVector.y);
         posVector.z = Mathf.Abs(posVector.z);
         float x = posVector.magnitude;
         Debug.Log(x);
-		//float x = 5.0f;
 
 		float vel2 = Mathf.Pow(m_LaunchForce, 2);
 		float? angle1 = Mathf.Atan((vel2 + Mathf.Sqrt(vel2 * vel2 - g * g * x * x)) / (g * x)) * Mathf.Rad2Deg;
@@ -91,7 +75,8 @@ public class TankShooting : MonoBehaviour
         m_CanFire = false;
 
         Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation);
-        shellInstance.velocity = m_LaunchForce * tankTurret.transform.forward;
+        //shellInstance.velocity = m_LaunchForce * tankTurret.transform.forward;
+        shellInstance.AddForce(m_LaunchForce * m_LaunchForce * tankTurret.transform.forward);
 
         m_ShootingAudio.clip = m_FireClip;
         m_ShootingAudio.Play();
