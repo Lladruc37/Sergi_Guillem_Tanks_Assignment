@@ -42,6 +42,30 @@ public class GameManager : MonoBehaviour
             m_Tanks[i].m_PlayerNumber = i + 1;
             m_Tanks[i].Setup();
         }
+
+        for (int i = 0; i < m_Tanks.Length; i++)
+        {
+            if (m_Tanks[i].m_PlayerNumber == 1)
+            {
+                for (int j = 0; j < m_Tanks.Length; j++)
+                {
+                    if(m_Tanks[j].m_PlayerNumber == 2)
+					{
+                        m_Tanks[i].m_Shooting.target = m_Tanks[j].m_Instance;
+					}
+                }
+            }
+			else if(m_Tanks[i].m_PlayerNumber == 2)
+			{
+                for(int j = 0;j<m_Tanks.Length;j++)
+				{
+                    if(m_Tanks[j].m_PlayerNumber == 1)
+					{
+                        m_Tanks[i].m_Shooting.target = m_Tanks[j].m_Instance;
+					}
+				}
+			}
+        }
     }
 
 

@@ -31,18 +31,18 @@ public class TankShooting : MonoBehaviour
 
     private void Update()
     {
-        GameObject[] list = FindObjectsOfType(typeof(GameObject)) as GameObject[];
-        foreach (GameObject go in list)
-		{
-            if(go.layer == this.gameObject.layer)
-			{
-                if (go != this)
-                {
-                    target = go;
-                    Debug.Log("Target found");
-                }
-			}
-		}
+  //      GameObject[] list = FindObjectsOfType(typeof(GameObject)) as GameObject[];
+  //      foreach (GameObject go in list)
+		//{
+  //          if(go.layer == this.gameObject.layer)
+		//	{
+  //              if (go != this)
+  //              {
+  //                  target = go;
+  //                  Debug.Log("Target found");
+  //              }
+		//	}
+		//}
 
         Vector3 posVector = target.transform.position - this.transform.position;
         posVector.x = Mathf.Abs(posVector.x);
