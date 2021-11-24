@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 public class TankMovement : MonoBehaviour
 {
@@ -10,12 +11,18 @@ public class TankMovement : MonoBehaviour
     public AudioClip m_EngineDriving;      
     public float m_PitchRange = 0.2f;
 
-    private string m_MovementAxisName;     
-    private string m_TurnAxisName;         
+    [Space(5)]
+    [Header("AI Settings")]
+    [Range(1.0f, 15.0f)] public float wanderRadius = 10;
+    [Range(1.0f, 15.0f)] public float wanderDistance = 10;
+    [Range(1.0f, 5.0f)] public float wanderJitter = 2.0f;
+    [HideInInspector]public Collider floor;
+    NavMeshAgent agent;
+    [HideInInspector] public GameObject target;
+    [HideInInspector] public GameObject patrolTarget;
+
     private Rigidbody m_Rigidbody;         
-    private float m_MovementInputValue;    
-    private float m_TurnInputValue;        
-    private float m_OriginalPitch;         
+    private float m_OriginalPitch;
 
 
     private void Awake()
@@ -27,8 +34,6 @@ public class TankMovement : MonoBehaviour
     private void OnEnable ()
     {
         m_Rigidbody.isKinematic = false;
-        m_MovementInputValue = 0f;
-        m_TurnInputValue = 0f;
     }
 
 
@@ -40,23 +45,43 @@ public class TankMovement : MonoBehaviour
 
     private void Start()
     {
-        m_MovementAxisName = "Vertical" + m_PlayerNumber;
-        m_TurnAxisName = "Horizontal" + m_PlayerNumber;
-
         m_OriginalPitch = m_MovementAudio.pitch;
+        agent = this.GetComponent<NavMeshAgent>();
+        GameObject[] objects = GameObject.FindGameObjectsWithTag("Ground");
+        foreach (GameObject c in objects)
+        {
+            if (c.GetComponent<MeshCollider>())
+            {
+                floor = c.GetComponent<MeshCollider>();
+                break;
+            }
+        }
+        //wanderJitter = Random.Range(1.0f, 3.0f);
+        patrolTarget = GameObject.FindGameObjectWithTag("Patroller");
     }
 
     private void Update()
     {
-        m_MovementInputValue = Input.GetAxis(m_MovementAxisName);
-        m_TurnInputValue = Input.GetAxis(m_TurnAxisName);
+        switch(m_PlayerNumber)
+        {
+            case 1:
+                {
+                    Pursue(patrolTarget);
+                    break;
+                }
+            case 2:
+                {
+                    Wander();
+                    break;
+                }
+            default:
+                break;
+        }
         EngineAudio();
     }
-
-
     private void EngineAudio()
     {
-        if(Mathf.Abs(m_TurnInputValue)<0.1f&& Mathf.Abs(m_MovementInputValue) < 0.1)
+        if(agent.velocity.magnitude >= 0.0f)
 		{
             if (m_MovementAudio.clip == m_EngineDriving)
 			{
@@ -76,26 +101,50 @@ public class TankMovement : MonoBehaviour
         }
     }
 
-
-    private void FixedUpdate()
+    Vector3 wanderTarget = Vector3.zero;
+    public void Wander()
     {
-        Move();
-        Turn();
+        wanderTarget += new Vector3(Random.Range(-1.0f, 1.0f) * wanderJitter,
+                                        0,
+                                        Random.Range(-1.0f, 1.0f) * wanderJitter);
+        wanderTarget.Normalize();
+        wanderTarget *= wanderRadius;
+
+        Vector3 targetLocal = wanderTarget + new Vector3(0, 0, wanderDistance);
+        Vector3 targetWorld = this.gameObject.transform.InverseTransformVector(targetLocal);
+
+        if (!floor.bounds.Contains(targetWorld))
+        {
+            targetWorld = -transform.position * 0.1f;
+
+        };
+
+        Seek(targetWorld);
     }
 
-
-    private void Move()
+    public void Seek(Vector3 location)
     {
-        Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime;
-
-        m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
+        agent.SetDestination(location);
     }
 
-
-    private void Turn()
+    public void Pursue(GameObject target)
     {
-        float turn = m_TurnInputValue * m_TurnSpeed * Time.deltaTime;
-        Quaternion turnRotation = Quaternion.Euler(0.0f, turn, 0.0f);
-        m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
+        Vector3 targetDir = target.transform.position - this.transform.position;
+
+        float relativeHeading = Vector3.Angle(this.transform.forward, this.transform.TransformVector(target.transform.forward));
+
+        float toTarget = Vector3.Angle(this.transform.forward, this.transform.TransformVector(targetDir));
+
+        //        if ((toTarget > 90 && relativeHeading < 20) || ds.currentSpeed < 0.01f)
+        if ((toTarget > 90 && relativeHeading < 20) || targetDir.magnitude >= 60.0f)
+        {
+            Debug.Log("TOO FAR");
+            Seek(target.transform.position);
+            return;
+        }
+
+        //        float lookAhead = targetDir.magnitude / (agent.speed + ds.currentSpeed);
+        float lookAhead = targetDir.magnitude / (agent.speed);
+        Seek(target.transform.position + target.transform.forward * lookAhead);
     }
 }

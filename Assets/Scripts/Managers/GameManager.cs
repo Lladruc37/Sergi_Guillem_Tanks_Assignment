@@ -12,7 +12,8 @@ public class GameManager : MonoBehaviour
     public Text m_MessageText;
     public Text m_MessageText_2;
     public GameObject m_TankPrefab;         
-    public TankManager[] m_Tanks;           
+    public TankManager[] m_Tanks;
+    public GameObject patroller;
 
 
     private int m_RoundNumber;              
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
                     if(m_Tanks[j].m_PlayerNumber == 2)
 					{
                         m_Tanks[i].m_Shooting.target = m_Tanks[j].m_Instance;
+                        m_Tanks[i].m_Movement.target = m_Tanks[j].m_Instance;
 					}
                 }
             }
@@ -62,8 +64,9 @@ public class GameManager : MonoBehaviour
                     if(m_Tanks[j].m_PlayerNumber == 1)
 					{
                         m_Tanks[i].m_Shooting.target = m_Tanks[j].m_Instance;
-					}
-				}
+                        m_Tanks[i].m_Movement.target = m_Tanks[j].m_Instance;
+                    }
+                }
 			}
         }
     }
@@ -102,6 +105,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator RoundStarting()
     {
         ResetAllTanks();
+        patroller.GetComponent<Patrol>().ResetPatrol();
         DisableTankControl();
 
         m_CameraControl.SetStartPositionAndSize();
@@ -117,6 +121,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator RoundPlaying()
     {
         EnableTankControl();
+        patroller.GetComponent<Patrol>().active = true;
 
         m_MessageText.text = string.Empty;
 
@@ -130,6 +135,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator RoundEnding()
     {
         DisableTankControl();
+        patroller.GetComponent<Patrol>().active = false;
 
         m_RoundWinner = null;
 

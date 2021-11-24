@@ -11,7 +11,7 @@ public class TankManager
     [HideInInspector] public GameObject m_Instance;          
     [HideInInspector] public int m_Wins;
 
-    private TankMovement m_Movement;       
+    public TankMovement m_Movement;       
     public TankShooting m_Shooting;
     private GameObject m_CanvasGameObject;
 

@@ -19,6 +19,8 @@ public class TankShooting : MonoBehaviour
 
     private float prevAngle = 0.0f;
     private float angle = 0.0f;
+    private float prevTankAngle = 0.0f;
+    private float tankAngle = 0.0f;
     private float g = -Physics.gravity.y;
 
     private void Start()
@@ -34,7 +36,7 @@ public class TankShooting : MonoBehaviour
         posVector.y = Mathf.Abs(posVector.y);
         posVector.z = Mathf.Abs(posVector.z);
         float x = posVector.magnitude;
-        Debug.Log(x);
+        //Debug.Log(x);
 
 		float vel2 = Mathf.Pow(m_LaunchForce, 2);
 		float? angle1 = Mathf.Atan((vel2 + Mathf.Sqrt(vel2 * vel2 - g * g * x * x)) / (g * x)) * Mathf.Rad2Deg;
@@ -55,8 +57,9 @@ public class TankShooting : MonoBehaviour
         }
 
 
-        if (angle != -1 && m_CanFire)
+        if (angle != -1 && m_CanFire && posVector.magnitude <= 25.0f)
         {
+            //tankTurret.transform.LookAt(target.transform.position);
             Fire();
         }
         else
@@ -76,7 +79,7 @@ public class TankShooting : MonoBehaviour
 
         Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation);
         //shellInstance.velocity = m_LaunchForce * tankTurret.transform.forward;
-        shellInstance.AddForce(m_LaunchForce * m_LaunchForce * tankTurret.transform.forward);
+        shellInstance.AddForce(m_LaunchForce * 25.0f * tankTurret.transform.forward);
 
         m_ShootingAudio.clip = m_FireClip;
         m_ShootingAudio.Play();
