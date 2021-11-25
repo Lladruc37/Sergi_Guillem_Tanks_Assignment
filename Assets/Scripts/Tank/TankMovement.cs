@@ -138,7 +138,6 @@ public class TankMovement : MonoBehaviour
         //        if ((toTarget > 90 && relativeHeading < 20) || ds.currentSpeed < 0.01f)
         if ((toTarget > 90 && relativeHeading < 20) || targetDir.magnitude >= 60.0f)
         {
-            Debug.Log("TOO FAR");
             Seek(target.transform.position);
             return;
         }
