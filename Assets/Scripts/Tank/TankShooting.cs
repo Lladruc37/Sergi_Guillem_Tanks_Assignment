@@ -78,7 +78,7 @@ public class TankShooting : MonoBehaviour
         dt += Time.deltaTime;
     }
 
-    private void Fire()
+    public void Fire()
     {
         m_CanFire = false;
 
