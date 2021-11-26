@@ -15,8 +15,8 @@ public class TankMovement : MonoBehaviour
     [Header("AI Settings")]
     [Range(1.0f, 15.0f)] public float wanderRadius = 10;
     [Range(1.0f, 15.0f)] public float wanderDistance = 10;
-    [Range(1.0f, 5.0f)] public float wanderJitter = 2.0f;
-    [HideInInspector]public Collider floor;
+    [Range(1.0f, 5.0f)] public float wanderJitter = 0.5f;
+    private Collider floor;
     NavMeshAgent agent;
     [HideInInspector] public GameObject target;
     [HideInInspector] public GameObject patrolTarget;
@@ -55,27 +55,11 @@ public class TankMovement : MonoBehaviour
                 break;
             }
         }
-        //wanderJitter = Random.Range(1.0f, 3.0f);
         patrolTarget = GameObject.FindGameObjectWithTag("Patroller");
     }
 
     private void Update()
     {
-        //switch(m_PlayerNumber)
-        //{
-        //    case 1:
-        //        {
-        //            Pursue(patrolTarget);
-        //            break;
-        //        }
-        //    case 2:
-        //        {
-        //            Wander();
-        //            break;
-        //        }
-        //    default:
-        //        break;
-        //}
         EngineAudio();
     }
     private void EngineAudio()

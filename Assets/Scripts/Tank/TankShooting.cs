@@ -13,19 +13,15 @@ public class TankShooting : MonoBehaviour
     public float delayTime = 0.0f;
     public float rotationSpeed = 1.5f;
     public int ammo = 5;
+    public BehaviorExecutor m_behaviour;
     [HideInInspector] public GameObject target;
-
-    private bool m_CanFire;
-    private float dt = 0.0f;
 
     private float angle = 0.0f;
     private Quaternion currentRot;
     private float g = -Physics.gravity.y;
-    public BehaviorExecutor m_behaviour;
 
     private void Start()
     {
-        m_CanFire = true;
         angle = -1;
         currentRot = tankTurret.transform.rotation;
     }
@@ -36,9 +32,9 @@ public class TankShooting : MonoBehaviour
         float x = posVector.magnitude;
         Quaternion orientation = Quaternion.LookRotation(new Vector3(posVector.x, 0, posVector.z));
 
-		float vel2 = Mathf.Pow(m_LaunchForce, 2);
-		float? angle1 = Mathf.Atan((vel2 + Mathf.Sqrt(vel2 * vel2 - g * g * x * x)) / (g * x)) * Mathf.Rad2Deg;
-		float? angle2 = Mathf.Atan((vel2 - Mathf.Sqrt(vel2 * vel2 - g * g * x * x)) / (g * x)) * Mathf.Rad2Deg;
+        float vel2 = Mathf.Pow(m_LaunchForce, 2);
+        float? angle1 = Mathf.Atan((vel2 + Mathf.Sqrt(vel2 * vel2 - g * g * x * x)) / (g * x)) * Mathf.Rad2Deg;
+        float? angle2 = Mathf.Atan((vel2 - Mathf.Sqrt(vel2 * vel2 - g * g * x * x)) / (g * x)) * Mathf.Rad2Deg;
 
         Quaternion angles = Quaternion.identity;
         if (angle1 != null && angle2 != null)
@@ -57,32 +53,17 @@ public class TankShooting : MonoBehaviour
         if (posVector.magnitude <= 25.0f)
 		{
             currentRot = orientation * angles;
-            //if (angle != -1 && m_CanFire)
-            //{
-            //    Fire();
-            //}
-            //else
-            //{
-            //    if (dt >= delayTime)
-            //    {
-            //        dt = 0.0f;
-            //        m_CanFire = true;
-            //    }
-            //}
         }
         else
 		{
             currentRot = this.transform.rotation;
         }
 
-        tankTurret.transform.rotation = Quaternion.Slerp(tankTurret.transform.rotation, currentRot, Time.deltaTime * rotationSpeed); //slerp
-        dt += Time.deltaTime;
+        tankTurret.transform.rotation = Quaternion.Slerp(tankTurret.transform.rotation, currentRot, Time.deltaTime * rotationSpeed);
     }
 
     public void Fire()
     {
-        m_CanFire = false;
-
         Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation);
         shellInstance.AddForce(m_LaunchForce * m_LaunchForce * tankTurret.transform.forward);
 

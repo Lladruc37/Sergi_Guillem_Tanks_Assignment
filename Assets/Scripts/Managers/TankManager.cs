@@ -27,8 +27,6 @@ public class TankManager
         m_Shooting.m_PlayerNumber = m_PlayerNumber;
         m_behaviour = m_Shooting.m_behaviour = m_behaviour;
         m_behaviour.blackboard.SetBehaviorParam("spawn", m_SpawnPoint.position);
-        m_behaviour.blackboard.SetBehaviorParam("spawnGO", m_SpawnPoint);
-        m_behaviour.blackboard.SetBehaviorParam("ammo", m_Shooting.ammo);
 
         m_ColoredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(m_PlayerColor) + ">PLAYER " + m_PlayerNumber + "</color>";
 
@@ -45,6 +43,7 @@ public class TankManager
     {
         m_Movement.enabled = false;
         m_Shooting.enabled = false;
+        m_behaviour.enabled = false;
 
         m_CanvasGameObject.SetActive(false);
     }
@@ -54,6 +53,7 @@ public class TankManager
     {
         m_Movement.enabled = true;
         m_Shooting.enabled = true;
+        m_behaviour.enabled = true;
 
         m_CanvasGameObject.SetActive(true);
     }
@@ -63,6 +63,7 @@ public class TankManager
     {
         m_Instance.transform.position = m_SpawnPoint.position;
         m_Instance.transform.rotation = m_SpawnPoint.rotation;
+        m_Shooting.ammo = 5;
 
         m_Instance.SetActive(false);
         m_Instance.SetActive(true);

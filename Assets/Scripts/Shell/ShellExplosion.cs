@@ -6,7 +6,7 @@ public class ShellExplosion : MonoBehaviour
     public ParticleSystem m_ExplosionParticles;       
     public AudioSource m_ExplosionAudio;              
     public float m_MaxDamage = 100f;                  
-    public float m_ExplosionForce = 700f;            
+    public float m_ExplosionForce = 450f;            
     public float m_MaxLifeTime = 2f;                  
     public float m_ExplosionRadius = 5f;              
 
