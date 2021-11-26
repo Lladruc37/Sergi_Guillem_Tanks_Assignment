@@ -118,14 +118,12 @@ public class TankMovement : MonoBehaviour
 
         float toTarget = Vector3.Angle(this.transform.forward, this.transform.TransformVector(targetDir));
 
-        //        if ((toTarget > 90 && relativeHeading < 20) || ds.currentSpeed < 0.01f)
         if ((toTarget > 90 && relativeHeading < 20) || targetDir.magnitude >= 60.0f)
         {
             Seek(target.transform.position);
             return;
         }
 
-        //        float lookAhead = targetDir.magnitude / (agent.speed + ds.currentSpeed);
         float lookAhead = targetDir.magnitude / (agent.speed);
         Seek(target.transform.position + target.transform.forward * lookAhead);
     }
