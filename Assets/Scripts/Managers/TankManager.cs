@@ -14,16 +14,21 @@ public class TankManager
     public TankMovement m_Movement;       
     public TankShooting m_Shooting;
     private GameObject m_CanvasGameObject;
-
+    private BehaviorExecutor m_behaviour;
 
     public void Setup()
     {
         m_Movement = m_Instance.GetComponent<TankMovement>();
         m_Shooting = m_Instance.GetComponent<TankShooting>();
         m_CanvasGameObject = m_Instance.GetComponentInChildren<Canvas>().gameObject;
+        m_behaviour = m_Instance.GetComponent<BehaviorExecutor>();
 
         m_Movement.m_PlayerNumber = m_PlayerNumber;
         m_Shooting.m_PlayerNumber = m_PlayerNumber;
+        m_behaviour = m_Shooting.m_behaviour = m_behaviour;
+        m_behaviour.blackboard.SetBehaviorParam("spawn", m_SpawnPoint.position);
+        m_behaviour.blackboard.SetBehaviorParam("spawnGO", m_SpawnPoint);
+        m_behaviour.blackboard.SetBehaviorParam("ammo", m_Shooting.ammo);
 
         m_ColoredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(m_PlayerColor) + ">PLAYER " + m_PlayerNumber + "</color>";
 

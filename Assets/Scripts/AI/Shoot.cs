@@ -1,16 +1,21 @@
 ﻿using UnityEngine;
 
 using Pada1.BBCore;
+using Pada1.BBCore.Tasks;
 using Pada1.BBCore.Framework;
 
-[Condition("MyConditions/shoot action")]
+[Action("MyActions/shoot action")]
 [Help("Shoots the target.")]
 public class ShootAction : BasePrimitiveAction
 {
 	[InParam("myself")]
 	public GameObject myself;
-	public override void OnStart()
+	public override TaskStatus OnUpdate()
 	{
-		myself.GetComponent<TankShooting>().Fire();
+		if (myself.GetComponent<TankShooting>().ammo > 0)
+		{
+			myself.GetComponent<TankShooting>().Fire();
+		}
+		return TaskStatus.COMPLETED;
 	}
 }

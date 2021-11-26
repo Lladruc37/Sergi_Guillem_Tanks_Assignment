@@ -21,6 +21,7 @@ public class TankShooting : MonoBehaviour
     private float angle = 0.0f;
     private Quaternion currentRot;
     private float g = -Physics.gravity.y;
+    public BehaviorExecutor m_behaviour;
 
     private void Start()
     {
@@ -56,18 +57,18 @@ public class TankShooting : MonoBehaviour
         if (posVector.magnitude <= 25.0f)
 		{
             currentRot = orientation * angles;
-            if (angle != -1 && m_CanFire)
-            {
-                Fire();
-            }
-            else
-            {
-                if (dt >= delayTime)
-                {
-                    dt = 0.0f;
-                    m_CanFire = true;
-                }
-            }
+            //if (angle != -1 && m_CanFire)
+            //{
+            //    Fire();
+            //}
+            //else
+            //{
+            //    if (dt >= delayTime)
+            //    {
+            //        dt = 0.0f;
+            //        m_CanFire = true;
+            //    }
+            //}
         }
         else
 		{
@@ -89,5 +90,7 @@ public class TankShooting : MonoBehaviour
         m_ShootingAudio.Play();
 
         ammo--;
+        BehaviorExecutor m_behaviour = this.GetComponent<BehaviorExecutor>();
+        m_behaviour.blackboard.SetBehaviorParam("ammo", this.ammo);
     }
 }

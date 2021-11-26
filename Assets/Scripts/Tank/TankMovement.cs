@@ -24,7 +24,6 @@ public class TankMovement : MonoBehaviour
     private Rigidbody m_Rigidbody;         
     private float m_OriginalPitch;
 
-
     private void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
@@ -62,21 +61,21 @@ public class TankMovement : MonoBehaviour
 
     private void Update()
     {
-        switch(m_PlayerNumber)
-        {
-            case 1:
-                {
-                    Pursue(patrolTarget);
-                    break;
-                }
-            case 2:
-                {
-                    Wander();
-                    break;
-                }
-            default:
-                break;
-        }
+        //switch(m_PlayerNumber)
+        //{
+        //    case 1:
+        //        {
+        //            Pursue(patrolTarget);
+        //            break;
+        //        }
+        //    case 2:
+        //        {
+        //            Wander();
+        //            break;
+        //        }
+        //    default:
+        //        break;
+        //}
         EngineAudio();
     }
     private void EngineAudio()

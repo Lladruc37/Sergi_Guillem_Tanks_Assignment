@@ -13,6 +13,6 @@ public class HasAmmo : ConditionBase
     public override bool Check()
 	{
 		int ammo = myself.GetComponent<TankShooting>().ammo;
-		return ammo > 0;
+		return ammo <= 0;
 	}
 }

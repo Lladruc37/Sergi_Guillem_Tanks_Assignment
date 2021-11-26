@@ -54,7 +54,11 @@ public class GameManager : MonoBehaviour
 					{
                         m_Tanks[i].m_Shooting.target = m_Tanks[j].m_Instance;
                         m_Tanks[i].m_Movement.target = m_Tanks[j].m_Instance;
-					}
+
+                        BehaviorExecutor m_behaviour = m_Tanks[i].m_Instance.GetComponent<BehaviorExecutor>();
+                        m_behaviour.blackboard.SetBehaviorParam("myself", m_Tanks[i].m_Instance);
+                        m_behaviour.blackboard.SetBehaviorParam("target", m_Tanks[j].m_Instance);
+                    }
                 }
             }
 			else if(m_Tanks[i].m_PlayerNumber == 2)
@@ -65,6 +69,10 @@ public class GameManager : MonoBehaviour
 					{
                         m_Tanks[i].m_Shooting.target = m_Tanks[j].m_Instance;
                         m_Tanks[i].m_Movement.target = m_Tanks[j].m_Instance;
+
+                        BehaviorExecutor m_behaviour = m_Tanks[i].m_Instance.GetComponent<BehaviorExecutor>();
+                        m_behaviour.blackboard.SetBehaviorParam("myself", m_Tanks[i].m_Instance);
+                        m_behaviour.blackboard.SetBehaviorParam("target", m_Tanks[j].m_Instance);
                     }
                 }
 			}
@@ -125,7 +133,7 @@ public class GameManager : MonoBehaviour
 
         m_MessageText.text = string.Empty;
 
-        while(!OneTankLeft())
+        while (!OneTankLeft())
         {
             yield return null;
         }
